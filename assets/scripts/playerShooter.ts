@@ -1,44 +1,20 @@
 
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, KeyCode, systemEvent, SystemEvent, EventKeyboard, director, serializeTag, resources, instantiate, Prefab, Asset } from 'cc';
+import { Bullet } from './bullet';
+import { Shooter } from './shooter';
 const { ccclass, property } = _decorator;
-
-/**
- * Predefined variables
- * Name = PlayerShooter
- * DateTime = Wed Sep 22 2021 19:56:00 GMT+0200 (hora de verano de Europa central)
- * Author = DrTaz0
- * FileBasename = playerShooter.ts
- * FileBasenameNoExtension = playerShooter
- * URL = db://assets/scripts/playerShooter.ts
- * ManualUrl = https://docs.cocos.com/creator/3.3/manual/en/
- *
- */
  
 @ccclass('PlayerShooter')
-export class PlayerShooter extends Component {
-    // [1]
-    // dummy = '';
-
-    // [2]
-    // @property
-    // serializableDummy = 0;
-
+export class PlayerShooter extends Shooter {
+    
     start () {
-        // [3]
+        systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
     }
 
-    // update (deltaTime: number) {
-    //     // [4]
-    // }
+    onKeyDown(event: EventKeyboard) {
+        if (event.keyCode == KeyCode.SPACE)
+        {
+            this.shoot();
+        }
+    }
 }
-
-/**
- * [1] Class member could be defined like this.
- * [2] Use `property` decorator if your want the member to be serializable.
- * [3] Your initialization goes here.
- * [4] Your update function goes here.
- *
- * Learn more about scripting: https://docs.cocos.com/creator/3.3/manual/en/scripting/
- * Learn more about CCClass: https://docs.cocos.com/creator/3.3/manual/en/scripting/ccclass.html
- * Learn more about life-cycle callbacks: https://docs.cocos.com/creator/3.3/manual/en/scripting/life-cycle-callbacks.html
- */

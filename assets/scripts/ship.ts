@@ -1,44 +1,89 @@
 
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, director, systemEvent, game, SystemEvent, EventKeyboard, KeyCode, clamp, UITransform, Rect, Vec3} from 'cc';
 const { ccclass, property } = _decorator;
-
-/**
- * Predefined variables
- * Name = Ship
- * DateTime = Wed Sep 22 2021 18:35:43 GMT+0200 (hora de verano de Europa central)
- * Author = DrTaz0
- * FileBasename = ship.ts
- * FileBasenameNoExtension = ship
- * URL = db://assets/scripts/ship.ts
- * ManualUrl = https://docs.cocos.com/creator/3.3/manual/en/
- *
- */
  
 @ccclass('Ship')
 export class Ship extends Component {
-    // [1]
-    // dummy = '';
+    
+    vMov : number = 0.0;
+    hMov : number = 0.0;
 
-    // [2]
-    // @property
-    // serializableDummy = 0;
+    @property speed : number = 250.0;
 
     start () {
-        // [3]
+        systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
+        systemEvent.on(SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
     }
 
-    // update (deltaTime: number) {
-    //     // [4]
-    // }
-}
+    onKeyDown(event: EventKeyboard) {
 
-/**
- * [1] Class member could be defined like this.
- * [2] Use `property` decorator if your want the member to be serializable.
- * [3] Your initialization goes here.
- * [4] Your update function goes here.
- *
- * Learn more about scripting: https://docs.cocos.com/creator/3.3/manual/en/scripting/
- * Learn more about CCClass: https://docs.cocos.com/creator/3.3/manual/en/scripting/ccclass.html
- * Learn more about life-cycle callbacks: https://docs.cocos.com/creator/3.3/manual/en/scripting/life-cycle-callbacks.html
- */
+        switch (event.keyCode)
+        {
+            case KeyCode.ARROW_UP:    this.vMov = this.speed;  break;
+            case KeyCode.ARROW_DOWN:  this.vMov = -this.speed; break;
+            case KeyCode.ARROW_RIGHT: this.hMov = this.speed;  break;
+            case KeyCode.ARROW_LEFT:  this.hMov = -this.speed; break;
+        }
+    }
+
+    onKeyUp(event: EventKeyboard) {
+
+        switch (event.keyCode)
+        {
+            case KeyCode.ARROW_UP:
+                if (this.vMov > 0)
+                {
+                    this.vMov = 0;
+                }
+            break;
+
+            case KeyCode.ARROW_DOWN:
+                if (this.vMov < 0)
+                {
+                this.vMov = 0;
+                }
+                break;
+
+            case KeyCode.ARROW_RIGHT:
+                if (this.hMov > 0)
+                {
+                    this.hMov = 0;
+                }
+                break;
+
+            case KeyCode.ARROW_LEFT:
+                if (this.hMov< 0)
+                {
+                    this.hMov = 0;
+                }
+                break;
+        }
+    }
+
+    update (dt: number) {
+        this.move(dt)
+        this.clampPosition();
+    }
+
+    private move(dt: number) {
+        var pos = this.node.position;
+        pos.set(pos.x + this.hMov * dt, pos.y + this.vMov * dt);
+        this.node.position = pos;
+    }
+
+    private getScreenRect() : Rect
+    {
+        var sprite = this.getComponent(UITransform);
+        return new Rect(-game.container.clientWidth / 2.0 + sprite.width / 2.0,
+                        -game.container.clientHeight / 2.0 + sprite.height / 2.0,
+                        game.container.clientWidth - sprite.width,
+                        game.container.clientHeight - sprite.height);
+    }
+
+    private clampPosition() {
+        var screenRect = this.getScreenRect();
+        var x = clamp(this.node.position.x, screenRect.xMin, screenRect.xMax);
+        var y = clamp(this.node.position.y, screenRect.yMin, screenRect.yMax);
+        this.node.position.set(x, y);
+    }
+}
