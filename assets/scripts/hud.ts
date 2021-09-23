@@ -24,7 +24,16 @@ export class Hud extends Component {
     start () {
         Hud.instance = this;
         var value = sys.localStorage.getItem(Hud.HIGH_SCORE_KEY);
-        this.highScore = this.defaultHighScore;
+        
+        if (value != null)
+        {
+            this.highScore = +value;
+        }
+        else
+        {
+            this.highScore = this.defaultHighScore;
+        }
+
         this.refreshHighScore();
     }
 
@@ -37,6 +46,9 @@ export class Hud extends Component {
         {
             this.highScore = this.score;
             this.refreshHighScore();
+
+            sys.localStorage.setItem(Hud.HIGH_SCORE_KEY, 
+                this.highScore.toString());
         }
     }
 
