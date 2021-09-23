@@ -1,3 +1,36 @@
 {
-  "__version__": "1.0.1"
+  "__version__": "1.0.1",
+  "layer": [
+    {
+      "name": "BACKGROUND",
+      "value": 1
+    }
+  ],
+  "physics": {
+    "collisionGroups": [
+      {
+        "index": 1,
+        "name": "ENEMY_FIRE"
+      },
+      {
+        "index": 2,
+        "name": "PLAYER_FIRE"
+      },
+      {
+        "index": 3,
+        "name": "ENEMY"
+      },
+      {
+        "index": 4,
+        "name": "PLAYER"
+      }
+    ],
+    "collisionMatrix": {
+      "0": 0,
+      "1": 16,
+      "2": 8,
+      "3": 20,
+      "4": 10
+    }
+  }
 }

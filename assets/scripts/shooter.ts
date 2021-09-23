@@ -5,7 +5,7 @@ const { ccclass, property } = _decorator;
 
  
 @ccclass('Shooter')
-export class Shooter extends Component {
+export abstract class Shooter extends Component {
     
     @property({type:Prefab}) bulletPrefab = null;
     @property speed : number = 500.0;

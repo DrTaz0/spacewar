@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, GraphicsComponent, Graphics, Vec3, UITransform, Rect, game, Vec2 } from 'cc';
+import { _decorator, Component, Collider, GraphicsComponent, Graphics, Vec3, UITransform, Rect, game, Vec2, ICollisionEvent } from 'cc';
 const { ccclass, property } = _decorator;
  
 @ccclass('Bullet')
@@ -14,6 +14,9 @@ export class Bullet extends Component {
         graphic.circle(0,0, this.radius);
         graphic.stroke();
         graphic.fill();
+
+        var collider = this.getComponent(Collider);
+        collider.on("onTriggerEnter", this.onTriggerEnter, this);
     }
 
     update (dt: number) {
@@ -34,9 +37,6 @@ export class Bullet extends Component {
         var pos2d = new Vec2(pos.x, pos.y);
         if (!this.getScreenRect().contains(pos2d))
         {
-            console.log("Bullet destroyed");
-            var graphic = this.getComponent(Graphics);
-            graphic.clear();
             this.destroy();
         }
         
@@ -48,5 +48,16 @@ export class Bullet extends Component {
                         -game.container.clientHeight / 2.0,
                         game.container.clientWidth,
                         game.container.clientHeight);
+    }
+
+    onTriggerEnter (event: ICollisionEvent) {
+        event.otherCollider.node.destroy();
+        this.node.destroy();
+    }
+
+    onDestroy()
+    {
+        var graphic = this.getComponent(Graphics);
+        graphic.clear();
     }
 }

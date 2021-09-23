@@ -1,5 +1,6 @@
 
-import { _decorator, Component, director, systemEvent, game, SystemEvent, EventKeyboard, KeyCode, clamp, UITransform, Rect, Vec3} from 'cc';
+import { _decorator, Component, director, systemEvent, game, SystemEvent, EventKeyboard, KeyCode, clamp, UITransform, Rect, Node, Prefab, instantiate, Collider, ICollisionEvent} from 'cc';
+import { Enemy } from './enemy';
 const { ccclass, property } = _decorator;
  
 @ccclass('Ship')
@@ -9,10 +10,21 @@ export class Ship extends Component {
     hMov : number = 0.0;
 
     @property speed : number = 250.0;
+    @property({type:Prefab}) explosionPrefab = null;
 
     start () {
         systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         systemEvent.on(SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+
+        var collider = this.getComponent(Collider);
+        collider.on("onTriggerEnter", this.onTriggerEnter, this);
+    }
+
+    onTriggerEnter (event: ICollisionEvent) {
+        if(event.otherCollider.getComponent(Enemy) != null)
+        {
+            this.node.destroy();
+        }
     }
 
     onKeyDown(event: EventKeyboard) {
@@ -85,5 +97,16 @@ export class Ship extends Component {
         var x = clamp(this.node.position.x, screenRect.xMin, screenRect.xMax);
         var y = clamp(this.node.position.y, screenRect.yMin, screenRect.yMax);
         this.node.position.set(x, y);
+    }
+
+    onDestroy()
+    {
+        if (this.explosionPrefab != null)
+        {
+            var explosion = instantiate(this.explosionPrefab) as Node;
+            director.getScene().addChild(explosion);
+            explosion.parent = this.node.parent;
+            explosion.worldPosition = this.node.worldPosition;
+        }
     }
 }
