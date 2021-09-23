@@ -31,4 +31,12 @@ export class EnemyManager extends Component {
         enemy.parent = this.node.parent;
         enemy.worldPosition = this.spawnPoint.worldPosition;
     }
+
+    /*update(dt:number)
+    {
+        var pos = this.spawnPoint.position;
+        var y = Math.sin(game.totalTime) * 250;
+        pos.set(pos.x, y, pos.z);
+        this.spawnPoint.position = pos;
+    }*/
 }
