@@ -1,6 +1,8 @@
 
 import { _decorator, Component, director, systemEvent, game, SystemEvent, EventKeyboard, KeyCode, clamp, UITransform, Rect, Node, Prefab, instantiate, Collider, ICollisionEvent} from 'cc';
 import { Enemy } from './enemy';
+import { GameManager } from './gameManager';
+import { Hud } from './hud';
 const { ccclass, property } = _decorator;
  
 @ccclass('Ship')
@@ -13,6 +15,8 @@ export class Ship extends Component {
     @property({type:Prefab}) explosionPrefab = null;
 
     start () {
+        GameManager.gameOver = false;
+
         systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         systemEvent.on(SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
 
@@ -107,6 +111,13 @@ export class Ship extends Component {
             director.getScene().addChild(explosion);
             explosion.parent = this.node.parent;
             explosion.worldPosition = this.node.worldPosition;
+        }
+
+        GameManager.gameOver = true;
+
+        if (Hud.getInstance() != null)
+        {
+            Hud.getInstance().gameOver();
         }
     }
 }

@@ -1,5 +1,7 @@
 
 import { _decorator, Component, Collider, GraphicsComponent, Graphics, Vec3, UITransform, Rect, game, Vec2, ICollisionEvent } from 'cc';
+import { Enemy } from './enemy';
+import { Hud } from './hud';
 const { ccclass, property } = _decorator;
  
 @ccclass('Bullet')
@@ -51,6 +53,13 @@ export class Bullet extends Component {
     }
 
     onTriggerEnter (event: ICollisionEvent) {
+        if (event.otherCollider.getComponent(Enemy) != null)
+        {
+            if (Hud.getInstance() != null)
+            {
+                Hud.getInstance().addPoints(100);
+            }
+        }
         event.otherCollider.node.destroy();
         this.node.destroy();
     }

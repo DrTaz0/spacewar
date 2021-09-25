@@ -1,5 +1,6 @@
 
 import { _decorator, Component, Node, director, game, clamp, Prefab, instantiate} from 'cc';
+import { GameManager } from './gameManager';
 const { ccclass, property } = _decorator;
 
  
@@ -17,7 +18,8 @@ export class EnemyManager extends Component {
     }
 
     scheduleSpawn() {
-        var difficultyFactor = clamp((game.totalTime / 1000) * (this.difficulty / 10), 1, Infinity);
+        var time = game.totalTime - GameManager.startTime;
+        var difficultyFactor = clamp((time / 1000) * (this.difficulty / 10), 1, Infinity);
         director.getScheduler().schedule(this.spawnEnemy, this, 
             (this.minSpawnDelay + Math.random() * this.maxSpawnDelay) / difficultyFactor);
     }

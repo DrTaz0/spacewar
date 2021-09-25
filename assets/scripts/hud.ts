@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, Label, sys } from 'cc';
+import { _decorator, Component, Node, Label, sys, Animation, AudioClip, AudioSource } from 'cc';
 const { ccclass, property } = _decorator;
  
 @ccclass('Hud')
@@ -16,6 +16,8 @@ export class Hud extends Component {
     
     @property({type:Label}) scoreLabel = null;
     @property({type:Label}) highScoreLabel = null;
+    @property({type:Label}) gameOverLabel = null;
+    @property({type:AudioClip}) gameOverMusic = null;
 
     public static getInstance() : Hud {
         return Hud.instance;
@@ -55,6 +57,16 @@ export class Hud extends Component {
     refreshHighScore()
     {
         this.highScoreLabel.string = this.highScore.toString();
+    }
+
+    gameOver()
+    {
+        console.log("Game Over");
+        this.gameOverLabel.getComponent(Animation).play();
+        var audioSource = this.getComponent(AudioSource);
+        audioSource.stop();
+        audioSource.clip = this.gameOverMusic;
+        audioSource.play();
     }
     
 }
