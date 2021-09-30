@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, GraphicsComponent, Graphics, Vec3, instantiate, Prefab, director, Vec2, Rect, game, Game } from 'cc';
+import { _decorator, Component, Node, GraphicsComponent, Graphics, Vec3, instantiate, Prefab, director, Vec2, Rect, game, Game, UITransform } from 'cc';
 import { GameManager } from './gameManager';
 import { Hud } from './hud';
 const { ccclass, property } = _decorator;
@@ -48,9 +48,10 @@ export class Enemy extends Component {
 
     protected getScreenRect() : Rect
     {
-        return new Rect(-game.container.clientWidth / 2.0 -300,
-                        -game.container.clientHeight / 2.0 -300,
-                        game.container.clientWidth + 600,
-                        game.container.clientHeight + 600);
+        var canvas = this.node.parent.getComponent(UITransform);
+        return new Rect(-canvas.width / 2.0 -300,
+                        -canvas.height / 2.0 -300,
+                        canvas.width + 600,
+                        canvas.height + 600);
     }
 }

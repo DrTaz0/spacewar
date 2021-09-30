@@ -46,10 +46,11 @@ export class Bullet extends Component {
 
     protected getScreenRect() : Rect
     {
-        return new Rect(-game.container.clientWidth / 2.0,
-                        -game.container.clientHeight / 2.0,
-                        game.container.clientWidth,
-                        game.container.clientHeight);
+        var canvas = this.node.parent.getComponent(UITransform);
+        return new Rect(-canvas.width / 2.0,
+                        -canvas.height / 2.0,
+                        canvas.width,
+                        canvas.height);
     }
 
     onTriggerEnter (event: ICollisionEvent) {

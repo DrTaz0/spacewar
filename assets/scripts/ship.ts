@@ -90,10 +90,11 @@ export class Ship extends Component {
     private getScreenRect() : Rect
     {
         var sprite = this.getComponent(UITransform);
-        return new Rect(-game.container.clientWidth / 2.0 + sprite.width / 2.0,
-                        -game.container.clientHeight / 2.0 + sprite.height / 2.0,
-                        game.container.clientWidth - sprite.width,
-                        game.container.clientHeight - sprite.height);
+        var canvas = this.node.parent.getComponent(UITransform);
+        return new Rect(-canvas.width / 2.0 + sprite.width / 2.0,
+                        -canvas.height / 2.0 + sprite.height / 2.0,
+                        canvas.width - sprite.width,
+                        canvas.height - sprite.height);
     }
 
     private clampPosition() {
